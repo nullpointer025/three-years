@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Three Years</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@600;700&display=swap');
 
   :root{
     --paper:#F6F1EA;
@@ -83,8 +83,17 @@
     align-items:center;
     justify-content:center;
     transform-style:preserve-3d;
-    transition: transform 0.15s ease-out;
     position:relative;
+    animation: spin360 6s linear infinite;
+  }
+  /* decorative, non-essential motion: keep its speed even when the OS asks for reduced motion */
+  #heroCard{
+    animation-duration: 6s !important;
+  }
+
+  @keyframes spin360{
+    from{ transform:rotateY(0deg); }
+    to{ transform:rotateY(360deg); }
   }
 
   .glass-card::before{
@@ -104,6 +113,14 @@
     color:var(--ink);
     transform:translateZ(40px);
     line-height:1;
+  }
+
+  .glass-photo{
+    width:calc(100% - 20px);
+    height:calc(100% - 20px);
+    object-fit:cover;
+    border-radius:16px;
+    transform:translateZ(40px);
   }
 
   h1.headline{
@@ -222,9 +239,10 @@
     perspective:900px;
     transition: transform 0.35s ease, box-shadow 0.35s ease;
     box-shadow: 0 1px 0 var(--line);
+    min-width:0;
   }
   .tl-card:hover{
-    transform: rotateX(3deg) rotateY(-2deg) translateY(-4px);
+    transform: translateY(-4px);
     box-shadow: 0 18px 34px -18px rgba(46,38,32,0.35);
   }
 
@@ -247,6 +265,306 @@
     font-size:0.68rem;
     color:var(--glass);
     letter-spacing:0.03em;
+  }
+
+  .tl-memories{
+    display:flex;
+    flex-direction:column;
+    gap:1.2rem;
+    margin-top:1rem;
+  }
+
+  .memory{
+    padding-top:1.1rem;
+    border-top:1px solid var(--line);
+  }
+  .memory:first-child{
+    padding-top:0;
+    border-top:none;
+  }
+
+  .memory h4{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:500;
+    font-size:0.7rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--glass);
+    margin-bottom:0.45rem;
+  }
+  .memory p{
+    color:var(--ink-soft);
+    font-weight:300;
+    line-height:1.6;
+    font-size:0.98rem;
+  }
+  .memory img{
+    display:block;
+    width:100%;
+    max-width:320px;
+    border-radius:12px;
+    margin-top:0.9rem;
+    box-shadow: 0 12px 24px -14px rgba(46,38,32,0.35);
+    cursor:pointer;
+    transition: transform 0.25s ease;
+  }
+  .memory img:hover{
+    transform:scale(1.02);
+  }
+
+  /* ---------- MEMORY CAROUSEL ---------- */
+  .tl-memories.carousel{
+    display:flex;
+    flex-direction:row;
+    flex-wrap:nowrap;
+    align-items:flex-start;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .tl-memories.carousel::-webkit-scrollbar{
+    display:none;
+  }
+  .tl-memories.carousel .memory{
+    flex:0 0 100%;
+    min-width:0;
+    scroll-snap-align:start;
+    padding-top:0;
+    padding-right:0.2rem;
+    border-top:none;
+  }
+  .tl-memories.carousel .memory.memory-teaser{
+    padding-top:2.2rem;
+    border-top:none;
+  }
+
+  .carousel-dots{
+    display:flex;
+    justify-content:center;
+    gap:0.5rem;
+    margin-top:1.2rem;
+  }
+  .carousel-dots button{
+    width:7px; height:7px;
+    border-radius:50%;
+    border:none;
+    padding:0;
+    background:var(--line);
+    cursor:pointer;
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+  .carousel-dots button.active{
+    background:var(--leather);
+    transform:scale(1.25);
+  }
+
+  .photo-carousel-wrap{
+    min-width:0;
+    width:100%;
+    align-self:start;
+  }
+  .photo-carousel{
+    display:flex;
+    flex-direction:row;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    margin-top:0;
+    min-width:0;
+    width:100%;
+  }
+  .photo-carousel::-webkit-scrollbar{
+    display:none;
+  }
+  .photo-carousel img{
+    flex:0 0 100%;
+    scroll-snap-align:start;
+    width:100%;
+    max-width:100%;
+    aspect-ratio:4/5;
+    object-fit:cover;
+    margin-top:0;
+  }
+
+  /* ---------- LIGHTBOX ---------- */
+  .lightbox{
+    position:fixed;
+    inset:0;
+    background:rgba(46,38,32,0.92);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:4vh 4vw;
+    z-index:100;
+    cursor:zoom-out;
+  }
+  .lightbox.open{
+    display:flex;
+  }
+  .lightbox img{
+    max-width:100%;
+    max-height:100%;
+    border-radius:10px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.5);
+  }
+  .lightbox-close{
+    position:absolute;
+    top:1.6rem;
+    right:1.8rem;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.85rem;
+    letter-spacing:0.08em;
+    color:rgba(246,241,234,0.85);
+    background:none;
+    border:1px solid rgba(246,241,234,0.35);
+    border-radius:999px;
+    padding:0.4rem 0.9rem;
+    cursor:pointer;
+  }
+  .lightbox-close:hover{
+    color:#F6F1EA;
+    border-color:rgba(246,241,234,0.7);
+  }
+
+  /* ---------- TEXT LIGHTBOX ---------- */
+  .text-lightbox{
+    cursor:default;
+  }
+  .text-lightbox-content{
+    background:var(--paper);
+    width:100%;
+    max-width:900px;
+    max-height:80vh;
+    overflow-y:auto;
+    padding:2.6rem 2.2rem;
+    border-radius:16px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.5);
+    cursor:default;
+  }
+  .text-lightbox-content p{
+    color:var(--ink-soft);
+    font-weight:300;
+    line-height:1.7;
+    font-size:0.98rem;
+    margin-bottom:0.9rem;
+  }
+  .text-lightbox-content p:last-child{
+    margin-bottom:0;
+  }
+  .text-lightbox-video{
+    display:block;
+    width:100%;
+    border-radius:12px;
+    margin-bottom:1.4rem;
+    box-shadow: 0 12px 24px -14px rgba(46,38,32,0.35);
+  }
+
+  .text-lightbox-split{
+    display:flex;
+    flex-direction:row;
+    align-items:flex-start;
+    gap:1.8rem;
+  }
+  .text-lightbox-split .text-lightbox-video{
+    flex:1 1 45%;
+    max-width:45%;
+    margin-bottom:0;
+    position:sticky;
+    top:0;
+  }
+  .text-lightbox-split .text-lightbox-text{
+    flex:1 1 55%;
+    min-width:0;
+  }
+  @media (max-width: 680px){
+    .text-lightbox-split{
+      flex-direction:column;
+    }
+    .text-lightbox-split .text-lightbox-video{
+      max-width:100%;
+      position:static;
+      margin-bottom:1.4rem;
+    }
+  }
+
+  /* ---------- MEMORY TEASER ---------- */
+  .memory-teaser{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    align-self:stretch;
+    min-height:320px;
+    gap:0.9rem;
+  }
+  .memory-teaser-title{
+    position:relative;
+    display:inline-block;
+  }
+  .memory-teaser-photo{
+    display:block;
+    width:100%;
+    max-width:320px;
+    border-radius:12px;
+    margin-top:0.9rem;
+    box-shadow: 0 12px 24px -14px rgba(46,38,32,0.35);
+    cursor:pointer;
+    transition: transform 0.25s ease;
+  }
+  .memory-teaser-photo:hover{
+    transform:scale(1.02);
+  }
+  .memory-teaser-cta{
+    position:absolute;
+    top:-1.3rem;
+    right:-2.4rem;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    color:var(--gold);
+    pointer-events:none;
+    transform:rotate(-6deg);
+  }
+  .memory-teaser-cta-text{
+    font-family:'Caveat', cursive;
+    font-weight:700;
+    font-size:1.4rem;
+    line-height:1;
+    white-space:nowrap;
+  }
+  .memory-teaser-cta-arrow{
+    width:36px;
+    height:36px;
+    margin-top:-0.2rem;
+  }
+
+  .memory-split{
+    display:grid;
+    grid-template-columns: 1fr 240px;
+    gap:0.4rem 1.6rem;
+  }
+  .memory-split h3,
+  .memory-split h4{
+    grid-column: 1 / -1;
+  }
+  .memory-split .memory-text{
+    display:flex;
+    flex-direction:column;
+    gap:0.9rem;
+  }
+  .memory-split img{
+    margin-top:0;
+    align-self:start;
+    max-width:100%;
+  }
+  @media (max-width:640px){
+    .memory-split{
+      grid-template-columns:1fr;
+    }
   }
 
   /* ---------- GALLERY ---------- */
@@ -352,51 +670,170 @@
     <div class="eyebrow hero-eyebrow">Three years · today</div>
     <div class="card-wrap">
       <div class="glass-card" id="heroCard">
-        <div class="glass-number">3</div>
+        <div id="heroCardFace"></div>
       </div>
     </div>
     <h1 class="headline">Three years of <em>us</em>,<br>and I'd choose every one again.</h1>
-    <p class="hero-sub">Glass, for the modern third anniversary — because after three years, you're the clearest thing I know.</p>
     <div class="scroll-cue"><div class="line"></div>scroll</div>
   </section>
 
   <!-- ============ MESSAGE ============ -->
   <section class="message">
-    <p>Three years ago I didn't know your coffee order, your laugh at 2am, or the way you fall asleep mid-sentence. Now I can't imagine a version of my life where I don't. Thank you for every ordinary Tuesday and every unforgettable one. Here's to the years we haven't lived yet.</p>
-    <div class="sign">— always, [your name]</div>
+    <p>Tre anni fa non conoscevo il suono della tua risata nel cuore della notte, né il modo dolcissimo in cui ti addormenti. Oggi non riesco nemmeno a immaginare una vita in cui tu non ci sia.
+Grazie per ogni giorno vissuto insieme: per i martedì più semplici, che con te diventano speciali, e per tutti quei momenti che porterò nel cuore per sempre. Sei il mio posto sicuro, la mia felicità quotidiana e il sogno che continua a scegliere ogni giorno.
+A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspettano ancora. Ti sceglierei ancora, mille volte, in ogni vita.</p>
+    <div class="sign">Ti amo</div>
   </section>
 
   <!-- ============ TIMELINE ============ -->
   <section class="timeline-section">
     <div class="timeline-head">
-      <div class="eyebrow">The story so far</div>
-      <h2>Year by year</h2>
+      <div class="eyebrow">La nostra storia</div>
+      <h2>Anno dopo anno</h2>
     </div>
     <div class="timeline" id="timeline">
       <div class="tl-item">
-        <div class="tl-year">YEAR 01</div>
+        <div class="tl-year">I anno</div>
         <div class="tl-card">
-          <h3>How it started</h3>
-          <p>Replace this with your own memory — the first date, the first "I like you," the moment you knew.</p>
-          <span class="edit-note">edit: find "How it started" in the code</span>
+          <div class="tl-memories carousel">
+            <div class="memory memory-split">
+              <h3>L'inizio di tutto</h3>
+              <h4>Come ci siamo conosciuti</h4>
+              <div class="memory-text">
+                <p>Con una semplice app, Tantan, ho conosciuto te. Chi avrebbe mai pensato che dietro a uno schermo si nascondesse la persona che avrebbe cambiato la mia vita?</p>
+                <p>Quell'app è stata il ponte che mi ha condotto da una vita dai toni grigi a una piena di colori. Da quel momento, ogni giorno ha acquistato un significato diverso, perché al mio fianco ci sei tu.</p>
+                <p>Sei stata il mio incontro più bello, la mia sorpresa più grande e la scelta che rifarei mille volte.</p>
+              </div>
+              <img src="assets/photos/tantan.webp" alt="Tantan">
+            </div>
+            <div class="memory memory-split">
+              <h4>La prima uscita</h4>
+              <div class="memory-text">
+                <p>La nostra prima uscita a CityLife è un momento che ricorderò sempre. Ero emozionato, ma allo stesso tempo avevo mille paure e mille domande nella testa: "E se dal vivo non le piacessi fisicamente?", "E se non avessimo la stessa sintonia?", "E se qualcosa non andasse come immagino?"</p>
+                <p>Poi sei arrivata tu. Ti ho vista, ci siamo presentati e, in un istante, tutte quelle insicurezze sono sparite. Con il tuo sorriso e il tuo modo di essere sei riuscita a farmi sentire subito a mio agio, come se ci conoscessimo da molto più tempo.</p>
+                <p>Quel giorno ho capito che con te potevo essere semplicemente me stesso, senza paure e senza maschere. E da quella prima uscita è iniziato qualcosa di speciale che, giorno dopo giorno, è diventato la parte più bella della mia vita.</p>
+              </div>
+              <img src="assets/photos/CityLife.jpg" alt="CityLife">
+            </div>
+            <div class="memory memory-split">
+              <h4>Il tuo primo compleanno insieme</h4>
+              <div class="memory-text">
+                <p>Il nostro primo compleanno tuo insieme è stata un'esperienza bellissima, un momento che porterò sempre nel cuore e per il quale sono profondamente grato.</p>
+                <p>Vorrei poter essere al tuo fianco ogni giorno dell'anno, non solo nei momenti speciali, ma anche in quelli più semplici, per donarti tutto l'amore, la cura e la felicità che meriti.</p>
+                <p>Perché più di qualsiasi regalo materiale, il mio desiderio più grande è riuscire a rendere speciale ogni tuo compleanno, farti sentire amata e ricordarti quanto sei importante per me.</p>
+                <p>Il regalo più bello, alla fine, è poter condividere questi momenti con te.</p>
+              </div>
+              <img src="assets/photos/PrimoCompleanno.png" alt="Primo compleanno insieme">
+            </div>
+            <div class="memory memory-split">
+              <h4>Il nostro primo viaggio insieme a Barcellona</h4>
+              <div class="memory-text">
+                <p>È stato qualcosa di davvero speciale. Prima di partire ero emozionatissimo: continuavo a immaginare tutto quello che avremmo potuto vivere insieme, i luoghi che avremmo visitato, le esperienze che avremmo condiviso e tutti i ricordi che avremmo creato.</p>
+                <p>Eppure, tra tutti quei momenti meravigliosi, ce n'è uno che è rimasto nel mio cuore più di ogni altro.</p>
+                <p>Quella notte in spiaggia, seduti vicini, con il rumore delle onde come unica colonna sonora, il buio tutto intorno a noi e tu tra le mie braccia. In quell'istante sembrava che il tempo si fosse fermato e che esistessimo soltanto noi due.</p>
+                <p>È stato lì che ho capito una cosa: non è il luogo a rendere un momento speciale, ma la persona con cui lo vivi.</p>
+                <p>E con te, anche il posto più semplice può diventare il ricordo più bello della mia vita.</p>
+              </div>
+              <div class="photo-carousel-wrap">
+                <div class="photo-carousel">
+                  <img src="assets/photos/Barcellona/Preview.jpg" alt="Barcellona">
+                  <img src="assets/photos/Barcellona/1.jpg" alt="Barcellona 1">
+                  <img src="assets/photos/Barcellona/2.jpg" alt="Barcellona 2">
+                  <img src="assets/photos/Barcellona/3.jpg" alt="Barcellona 3">
+                  <img src="assets/photos/Barcellona/4.jpg" alt="Barcellona 4">
+                  <img src="assets/photos/Barcellona/5.jpg" alt="Barcellona 5">
+                  <img src="assets/photos/Barcellona/6.jpg" alt="Barcellona 6">
+                  <img src="assets/photos/Barcellona/7.jpg" alt="Barcellona 7">
+                  <img src="assets/photos/Barcellona/8.jpg" alt="Barcellona 8">
+                </div>
+              </div>
+            </div>
+            <div class="memory memory-split">
+              <h4>Il viaggio a Vienna</h4>
+              <div class="memory-text">
+                <p>Il viaggio a Vienna è uno di quei ricordi che riescono ancora oggi a farmi sorridere ogni volta che ci penso.</p>
+                <p>C'era il clima perfetto, né troppo freddo né troppo caldo, e ogni momento sembrava avere qualcosa di speciale perché lo stavo vivendo insieme a te. Dalla visita al parco divertimenti, fino a quando siamo saliti sulla ruota panoramica.</p>
+                <p>Da lassù, guardando la città dall'alto, sembrava che il mondo si fosse fermato per un istante. Tutto intorno a noi sembrava meno importante, perché in quel momento ciò che contava davvero era solo una cosa: essere lì, insieme a te.</p>
+                <p>E come dimenticare quel pranzo con la cotoletta gigantesca? Un momento semplice, forse anche divertente, ma proprio quei piccoli dettagli sono quelli che rimangono impressi nel cuore.</p>
+                <p>Perché alla fine sono i momenti più semplici, quelli vissuti insieme alla persona giusta, a trasformarsi nei ricordi più belli. E Vienna è diventata speciale perché l'ho vissuta con te.</p>
+              </div>
+              <div class="photo-carousel-wrap">
+                <div class="photo-carousel">
+                  <img src="assets/photos/Vienna/Preview.jpeg" alt="Vienna">
+                  <img src="assets/photos/Vienna/1.jpg" alt="Vienna 1">
+                  <img src="assets/photos/Vienna/2.jpg" alt="Vienna 2">
+                  <img src="assets/photos/Vienna/3.jpg" alt="Vienna 3">
+                  <img src="assets/photos/Vienna/5.jpeg" alt="Vienna 5">
+                  <img src="assets/photos/Vienna/6.jpeg" alt="Vienna 6">
+                  <img src="assets/photos/Vienna/7.jpeg" alt="Vienna 7">
+                </div>
+              </div>
+            </div>
+            <div class="memory memory-teaser">
+              <div class="memory-teaser-title">
+                <h4>Primo Anniversario</h4>
+                <div class="memory-teaser-cta" aria-hidden="true">
+                  <span class="memory-teaser-cta-text">click me</span>
+                  <svg class="memory-teaser-cta-arrow" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M55 12 C 40 10, 15 20, 12 45" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M4 36 L12 45 L21 38" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+              <img class="memory-teaser-photo" src="assets/photos/PrimoAnniversario/BG.jpeg" alt="Primo Anniversario" tabindex="0" role="button" aria-label="Apri il ricordo: Primo Anniversario">
+              <template>
+                <div class="text-lightbox-split">
+                  <video controls playsinline autoplay class="text-lightbox-video">
+                    <source src="assets/photos/PrimoAnniversario/Video%20anniv.mp4" type="video/mp4">
+                  </video>
+                  <div class="text-lightbox-text">
+                    <p>Il nostro primo anniversario è un traguardo che mi rende immensamente felice. Pensare che sia già passato un anno da quando abbiamo iniziato questo viaggio insieme mi riempie il cuore di emozioni.</p>
+                    <p>Un anno fatto di sorrisi, momenti indimenticabili, piccole abitudini diventate speciali e ricordi che custodirò sempre dentro di me. In questo tempo ho avuto la fortuna di conoscerti sempre di più, di scoprire ogni tuo lato, le tue qualità, il tuo modo unico di rendere più belle anche le giornate più semplici.</p>
+                    <p>Sono felice di essere arrivato fin qui con te, ma ancora di più sono emozionato per tutto quello che ci aspetta. Perché questo primo anno non è solo un traguardo, ma l'inizio di tanti altri capitoli che voglio vivere al tuo fianco.</p>
+                    <p>Grazie per ogni momento condiviso, per il tuo amore, per il tuo sorriso e per tutto quello che sei.</p>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="tl-item">
-        <div class="tl-year">YEAR 02</div>
+      <!-- <div class="tl-item">
+        <div class="tl-year">II anno</div>
         <div class="tl-card">
           <h3>A memory worth keeping</h3>
-          <p>Replace this with a trip, an inside joke, a hard time you got through together — whatever mattered most.</p>
-          <span class="edit-note">edit: find "A memory worth keeping" in the code</span>
+          <div class="tl-memories">
+            <div class="memory">
+              <h4>Il viaggio</h4>
+              <p>Replace this with a trip you took together — where you went, what made it stick.</p>
+              <span class="edit-note">edit: find "Il viaggio" in the code</span>
+            </div>
+            <div class="memory">
+              <h4>Un momento difficile, superato insieme</h4>
+              <p>Replace this with a hard time you got through together — whatever mattered most.</p>
+              <span class="edit-note">edit: find "Un momento difficile" in the code</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="tl-item">
-        <div class="tl-year">YEAR 03</div>
+        <div class="tl-year">III anno</div>
         <div class="tl-card">
           <h3>Right now</h3>
-          <p>Replace this with where you are today — what you're building, dreaming about, or grateful for this year.</p>
-          <span class="edit-note">edit: find "Right now" in the code</span>
+          <div class="tl-memories">
+            <div class="memory">
+              <h4>Dove siamo ora</h4>
+              <p>Replace this with where you are today — what you're building or grateful for this year.</p>
+              <span class="edit-note">edit: find "Dove siamo ora" in the code</span>
+            </div>
+            <div class="memory">
+              <h4>Cosa sogniamo</h4>
+              <p>Replace this with what you're dreaming about together next.</p>
+              <span class="edit-note">edit: find "Cosa sogniamo" in the code</span>
+            </div>
+          </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </section>
 
@@ -427,19 +864,51 @@
     </div>
   </section>
 
+  <!-- ============ LIGHTBOX ============ -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">close ✕</button>
+    <img id="lightboxImg" src="" alt="">
+  </div>
+
+  <!-- ============ TEXT LIGHTBOX ============ -->
+  <div class="lightbox text-lightbox" id="textLightbox">
+    <button class="lightbox-close" id="textLightboxClose">close ✕</button>
+    <div class="text-lightbox-content" id="textLightboxContent"></div>
+  </div>
+
 <script>
-  // Mouse-parallax tilt on hero glass card
-  const card = document.getElementById('heroCard');
-  const wrap = document.querySelector('.hero');
-  wrap.addEventListener('mousemove', (e) => {
-    const r = card.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width - 0.5;
-    const y = (e.clientY - r.top) / r.height - 0.5;
-    card.style.transform = `rotateY(${x * 18}deg) rotateX(${-y * 18}deg)`;
-  });
-  wrap.addEventListener('mouseleave', () => {
-    card.style.transform = 'rotateY(0deg) rotateX(0deg)';
-  });
+
+  // Random photo on each hero card spin
+  const heroCard = document.getElementById('heroCard');
+  const heroCardFace = document.getElementById('heroCardFace');
+  const spinnerPhotos = [
+    '1.jpg','2.jpg','3.jpg','5.jpeg','6.jpg','7.jpg',
+    'Preview.jpg','Preview.jpeg','PrimoCompleanno.png',
+    'WhatsApp Image 2026-08-04 at 12.45.00.jpeg',
+    'WhatsApp Image 2026-08-04 at 12.45.00 (1).jpeg',
+    'WhatsApp Image 2026-08-04 at 12.45.00 (2).jpeg',
+    'WhatsApp Image 2026-08-04 at 12.45.00 (3).jpeg',
+    'WhatsApp Image 2026-08-04 at 12.45.00 (4).jpeg',
+    'WhatsApp Image 2026-08-04 at 12.45.00 (5).jpeg',
+    'WhatsApp Image 2026-08-04 at 12.45.00 (6).jpeg',
+    'WhatsApp Image 2026-08-04 at 12.45.00 (7).jpeg',
+    'WhatsApp Image 2026-08-04 at 12.45.00 (8).jpeg',
+    'WhatsApp Image 2026-08-04 at 12.45.00 (9).jpeg',
+    'WhatsApp Image 2026-08-04 at 12.45.01.jpeg',
+    'WhatsApp Image 2026-08-04 at 12.45.01 (1).jpeg',
+    'WhatsApp Image 2026-08-04 at 12.45.01 (2).jpeg'
+  ];
+  let lastSpinnerPhoto = null;
+  function showRandomSpinnerPhoto(){
+    let photo;
+    do {
+      photo = spinnerPhotos[Math.floor(Math.random() * spinnerPhotos.length)];
+    } while (spinnerPhotos.length > 1 && photo === lastSpinnerPhoto);
+    lastSpinnerPhoto = photo;
+    heroCardFace.innerHTML = `<img class="glass-photo" src="assets/photos/Spinner/${encodeURIComponent(photo)}" alt="">`;
+  }
+  showRandomSpinnerPhoto();
+  heroCard.addEventListener('animationiteration', showRandomSpinnerPhoto);
 
   // Scroll reveal for timeline
   const items = document.querySelectorAll('.tl-item');
@@ -452,6 +921,105 @@
     });
   }, { threshold: 0.25 });
   items.forEach(i => io.observe(i));
+
+  // Swipeable carousel with dot indicators (used for both memory blocks and photo galleries)
+  function initCarousel(carousel, slideSelector, dotLabel){
+    const slides = Array.from(carousel.querySelectorAll(slideSelector));
+    if (slides.length < 2) return;
+
+    const dots = document.createElement('div');
+    dots.className = 'carousel-dots';
+    slides.forEach((slide, i) => {
+      const dot = document.createElement('button');
+      dot.setAttribute('aria-label', `${dotLabel} ${i + 1}`);
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => {
+        slides[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+      });
+      dots.appendChild(dot);
+    });
+    carousel.insertAdjacentElement('afterend', dots);
+
+    const dotButtons = Array.from(dots.children);
+    const slideIO = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const idx = slides.indexOf(entry.target);
+          dotButtons.forEach(d => d.classList.remove('active'));
+          dotButtons[idx].classList.add('active');
+        }
+      });
+    }, { root: carousel, threshold: 0.6 });
+    slides.forEach(s => slideIO.observe(s));
+  }
+
+  document.querySelectorAll('.tl-memories.carousel').forEach(c => initCarousel(c, '.memory', 'Vai al ricordo'));
+  document.querySelectorAll('.photo-carousel').forEach(c => initCarousel(c, 'img', 'Vai alla foto'));
+
+  // Lightbox for memory photos
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxClose = document.getElementById('lightboxClose');
+
+  document.querySelectorAll('.memory:not(.memory-teaser) img').forEach(img => {
+    img.addEventListener('click', () => {
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      lightbox.classList.add('open');
+    });
+  });
+
+  function closeLightbox(){
+    lightbox.classList.remove('open');
+    lightboxImg.src = '';
+  }
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  // Text lightbox for memory teasers
+  const textLightbox = document.getElementById('textLightbox');
+  const textLightboxContent = document.getElementById('textLightboxContent');
+  const textLightboxClose = document.getElementById('textLightboxClose');
+
+  function openTextLightbox(template){
+    textLightboxContent.innerHTML = '';
+    textLightboxContent.appendChild(template.content.cloneNode(true));
+    textLightbox.classList.add('open');
+    const video = textLightboxContent.querySelector('video');
+    if (video) video.play().catch(() => {});
+  }
+  function closeTextLightbox(){
+    textLightbox.classList.remove('open');
+    const video = textLightboxContent.querySelector('video');
+    if (video) video.pause();
+    textLightboxContent.innerHTML = '';
+  }
+
+  document.querySelectorAll('.memory-teaser-photo').forEach(photo => {
+    const template = photo.closest('.memory-teaser').querySelector('template');
+    const open = () => openTextLightbox(template);
+    photo.addEventListener('click', open);
+    photo.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        open();
+      }
+    });
+  });
+
+  textLightboxClose.addEventListener('click', closeTextLightbox);
+  textLightbox.addEventListener('click', (e) => {
+    if (e.target === textLightbox) closeTextLightbox();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape'){
+      closeLightbox();
+      closeTextLightbox();
+    }
+  });
 </script>
 
 </body>
