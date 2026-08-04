@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three Years</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root{
+    --paper:#F6F1EA;
+    --ink:#2E2620;
+    --leather:#A6673C;
+    --glass:#8FAFC9;
+    --gold:#C9A667;
+    --ink-soft: rgba(46,38,32,0.62);
+    --line: rgba(46,38,32,0.12);
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    overflow-x:hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
+  }
+
+  /* ---------- utility ---------- */
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--leather);
+  }
+
+  section{
+    padding:7rem 6vw;
+    max-width:1100px;
+    margin:0 auto;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100svh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    perspective:1400px;
+    padding:6rem 6vw 4rem;
+    position:relative;
+  }
+
+  .hero-eyebrow{
+    margin-bottom:1.6rem;
+  }
+
+  .card-wrap{
+    perspective:1400px;
+    margin-bottom:2.4rem;
+  }
+
+  .glass-card{
+    width:min(78vw, 300px);
+    aspect-ratio:1/1.15;
+    border-radius:22px;
+    background: linear-gradient(150deg, rgba(255,255,255,0.55), rgba(143,175,201,0.28));
+    border:1px solid rgba(255,255,255,0.6);
+    box-shadow:
+      0 2px 0 rgba(166,103,60,0.9),
+      0 30px 60px -20px rgba(46,38,32,0.35);
+    backdrop-filter: blur(6px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transform-style:preserve-3d;
+    transition: transform 0.15s ease-out;
+    position:relative;
+  }
+
+  .glass-card::before{
+    content:'';
+    position:absolute;
+    inset:10px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,0.5);
+    pointer-events:none;
+  }
+
+  .glass-number{
+    font-family:'Fraunces', serif;
+    font-optical-sizing:auto;
+    font-weight:500;
+    font-size:9rem;
+    color:var(--ink);
+    transform:translateZ(40px);
+    line-height:1;
+  }
+
+  h1.headline{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:clamp(2.4rem, 6vw, 4.2rem);
+    line-height:1.05;
+    letter-spacing:-0.01em;
+    max-width:14ch;
+  }
+
+  .headline em{
+    font-style:italic;
+    color:var(--leather);
+  }
+
+  .hero-sub{
+    margin-top:1.2rem;
+    color:var(--ink-soft);
+    font-weight:300;
+    font-size:1.05rem;
+    max-width:36ch;
+  }
+
+  .scroll-cue{
+    position:absolute;
+    bottom:2.4rem;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.68rem;
+    letter-spacing:0.12em;
+    color:var(--ink-soft);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:0.5rem;
+  }
+  .scroll-cue .line{
+    width:1px; height:34px;
+    background:var(--ink-soft);
+    animation:pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:0.25; }
+    50%{ opacity:0.9; }
+  }
+
+  /* ---------- MESSAGE ---------- */
+  .message{
+    text-align:center;
+    max-width:640px;
+  }
+  .message p{
+    font-family:'Fraunces', serif;
+    font-weight:300;
+    font-optical-sizing:auto;
+    font-size:clamp(1.3rem, 2.6vw, 1.7rem);
+    line-height:1.55;
+    color:var(--ink);
+  }
+  .message .sign{
+    margin-top:2rem;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.08em;
+    color:var(--leather);
+    text-transform:uppercase;
+  }
+
+  /* ---------- TIMELINE ---------- */
+  .timeline-head{
+    text-align:center;
+    margin-bottom:4rem;
+  }
+  .timeline-head h2{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:clamp(1.8rem,4vw,2.6rem);
+    margin-top:0.6rem;
+  }
+
+  .timeline{
+    display:flex;
+    flex-direction:column;
+    gap:2.4rem;
+  }
+
+  .tl-item{
+    display:grid;
+    grid-template-columns:100px 1fr;
+    gap:2rem;
+    align-items:start;
+    opacity:0;
+    transform:translateY(28px) rotateX(8deg);
+    transform-origin:top center;
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.2,.7,.3,1);
+  }
+  .tl-item.visible{
+    opacity:1;
+    transform:translateY(0) rotateX(0deg);
+  }
+
+  .tl-year{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.08em;
+    color:var(--leather);
+    padding-top:0.4rem;
+    text-align:right;
+  }
+
+  .tl-card{
+    background:rgba(255,255,255,0.55);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:1.8rem 2rem;
+    perspective:900px;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    box-shadow: 0 1px 0 var(--line);
+  }
+  .tl-card:hover{
+    transform: rotateX(3deg) rotateY(-2deg) translateY(-4px);
+    box-shadow: 0 18px 34px -18px rgba(46,38,32,0.35);
+  }
+
+  .tl-card h3{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:1.3rem;
+    margin-bottom:0.5rem;
+  }
+  .tl-card p{
+    color:var(--ink-soft);
+    font-weight:300;
+    line-height:1.6;
+    font-size:0.98rem;
+  }
+  .tl-card .edit-note{
+    display:block;
+    margin-top:0.6rem;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.68rem;
+    color:var(--glass);
+    letter-spacing:0.03em;
+  }
+
+  /* ---------- GALLERY ---------- */
+  .gallery-head{
+    text-align:center;
+    margin-bottom:3rem;
+  }
+  .gallery-head h2{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:clamp(1.8rem,4vw,2.6rem);
+    margin-top:0.6rem;
+  }
+
+  .gallery{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1.4rem;
+    perspective:1200px;
+  }
+  @media (max-width:700px){
+    .gallery{ grid-template-columns:repeat(2,1fr); }
+  }
+
+  .photo-card{
+    aspect-ratio:4/5;
+    border-radius:14px;
+    background:
+      linear-gradient(160deg, rgba(143,175,201,0.35), rgba(201,166,103,0.25));
+    border:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    gap:0.5rem;
+    transform-style:preserve-3d;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    cursor:default;
+  }
+  .photo-card:hover{
+    transform:rotateY(8deg) rotateX(-4deg) translateY(-6px);
+    box-shadow:0 20px 34px -18px rgba(46,38,32,0.35);
+  }
+  .photo-card .ph-mark{
+    font-family:'Fraunces', serif;
+    font-size:1.6rem;
+    color:var(--ink-soft);
+  }
+  .photo-card span.lbl{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.62rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  /* actual photo, hidden unless src is set */
+  .photo-card img{
+    width:100%; height:100%;
+    object-fit:cover;
+    border-radius:13px;
+    display:none;
+  }
+  .photo-card img[src]:not([src=""]){
+    display:block;
+  }
+  .photo-card img[src]:not([src=""]) ~ .ph-mark,
+  .photo-card img[src]:not([src=""]) ~ span.lbl{
+    display:none;
+  }
+
+  /* ---------- CLOSING ---------- */
+  .closing{
+    text-align:center;
+    padding-bottom:9rem;
+  }
+  .closing .big{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:clamp(1.8rem, 4vw, 2.6rem);
+    max-width:16ch;
+    margin:0 auto 1rem;
+  }
+  .closing .years-mark{
+    display:flex;
+    justify-content:center;
+    gap:0.6rem;
+    margin-top:2.2rem;
+  }
+  .yr-dot{
+    width:8px; height:8px;
+    border-radius:50%;
+    background:var(--gold);
+  }
+  .yr-dot:last-child{ background:var(--leather); }
+</style>
+</head>
+<body>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="eyebrow hero-eyebrow">Three years · today</div>
+    <div class="card-wrap">
+      <div class="glass-card" id="heroCard">
+        <div class="glass-number">3</div>
+      </div>
+    </div>
+    <h1 class="headline">Three years of <em>us</em>,<br>and I'd choose every one again.</h1>
+    <p class="hero-sub">Glass, for the modern third anniversary — because after three years, you're the clearest thing I know.</p>
+    <div class="scroll-cue"><div class="line"></div>scroll</div>
+  </section>
+
+  <!-- ============ MESSAGE ============ -->
+  <section class="message">
+    <p>Three years ago I didn't know your coffee order, your laugh at 2am, or the way you fall asleep mid-sentence. Now I can't imagine a version of my life where I don't. Thank you for every ordinary Tuesday and every unforgettable one. Here's to the years we haven't lived yet.</p>
+    <div class="sign">— always, [your name]</div>
+  </section>
+
+  <!-- ============ TIMELINE ============ -->
+  <section class="timeline-section">
+    <div class="timeline-head">
+      <div class="eyebrow">The story so far</div>
+      <h2>Year by year</h2>
+    </div>
+    <div class="timeline" id="timeline">
+      <div class="tl-item">
+        <div class="tl-year">YEAR 01</div>
+        <div class="tl-card">
+          <h3>How it started</h3>
+          <p>Replace this with your own memory — the first date, the first "I like you," the moment you knew.</p>
+          <span class="edit-note">edit: find "How it started" in the code</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">YEAR 02</div>
+        <div class="tl-card">
+          <h3>A memory worth keeping</h3>
+          <p>Replace this with a trip, an inside joke, a hard time you got through together — whatever mattered most.</p>
+          <span class="edit-note">edit: find "A memory worth keeping" in the code</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">YEAR 03</div>
+        <div class="tl-card">
+          <h3>Right now</h3>
+          <p>Replace this with where you are today — what you're building, dreaming about, or grateful for this year.</p>
+          <span class="edit-note">edit: find "Right now" in the code</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <section class="gallery-section">
+    <div class="gallery-head">
+      <div class="eyebrow">In pictures</div>
+      <h2>A few favorites</h2>
+    </div>
+    <div class="gallery">
+      <!-- to add a photo: drop the file in assets/photos/ and set this img's src, e.g. src="assets/photos/photo-1.jpg" -->
+      <div class="photo-card"><img src="" alt=""><div class="ph-mark">✦</div><span class="lbl">Photo 1</span></div>
+      <div class="photo-card"><img src="" alt=""><div class="ph-mark">✦</div><span class="lbl">Photo 2</span></div>
+      <div class="photo-card"><img src="" alt=""><div class="ph-mark">✦</div><span class="lbl">Photo 3</span></div>
+      <div class="photo-card"><img src="" alt=""><div class="ph-mark">✦</div><span class="lbl">Photo 4</span></div>
+      <div class="photo-card"><img src="" alt=""><div class="ph-mark">✦</div><span class="lbl">Photo 5</span></div>
+      <div class="photo-card"><img src="" alt=""><div class="ph-mark">✦</div><span class="lbl">Photo 6</span></div>
+    </div>
+  </section>
+
+  <!-- ============ CLOSING ============ -->
+  <section class="closing">
+    <p class="big">Happy 3rd anniversary, my love.</p>
+    <div class="years-mark">
+      <div class="yr-dot"></div>
+      <div class="yr-dot"></div>
+      <div class="yr-dot"></div>
+    </div>
+  </section>
+
+<script>
+  // Mouse-parallax tilt on hero glass card
+  const card = document.getElementById('heroCard');
+  const wrap = document.querySelector('.hero');
+  wrap.addEventListener('mousemove', (e) => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform = `rotateY(${x * 18}deg) rotateX(${-y * 18}deg)`;
+  });
+  wrap.addEventListener('mouseleave', () => {
+    card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+  });
+
+  // Scroll reveal for timeline
+  const items = document.querySelectorAll('.tl-item');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.25 });
+  items.forEach(i => io.observe(i));
+</script>
+
+</body>
+</html>
