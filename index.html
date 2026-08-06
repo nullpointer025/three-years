@@ -251,6 +251,7 @@
     font-weight:500;
     font-size:1.3rem;
     margin-bottom:0.5rem;
+    text-align:center;
   }
   .tl-card p{
     color:var(--ink-soft);
@@ -363,30 +364,26 @@
     min-width:0;
     width:100%;
     align-self:start;
+    overflow:hidden;
   }
   .photo-carousel{
     display:flex;
     flex-direction:row;
     flex-wrap:nowrap;
-    overflow-x:auto;
-    scroll-snap-type:x mandatory;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
     margin-top:0;
     min-width:0;
     width:100%;
-  }
-  .photo-carousel::-webkit-scrollbar{
-    display:none;
+    touch-action:pan-y;
   }
   .photo-carousel img{
     flex:0 0 100%;
-    scroll-snap-align:start;
     width:100%;
     max-width:100%;
     aspect-ratio:4/5;
     object-fit:cover;
     margin-top:0;
+    -webkit-user-drag:none;
+    user-select:none;
   }
 
   /* ---------- LIGHTBOX ---------- */
@@ -806,20 +803,93 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
           </div>
         </div>
       </div>
-      <!-- <div class="tl-item">
+      <div class="tl-item">
         <div class="tl-year">II anno</div>
         <div class="tl-card">
-          <h3>A memory worth keeping</h3>
-          <div class="tl-memories">
-            <div class="memory">
-              <h4>Il viaggio</h4>
-              <p>Replace this with a trip you took together — where you went, what made it stick.</p>
-              <span class="edit-note">edit: find "Il viaggio" in the code</span>
+          <div class="tl-memories carousel">
+            <div class="memory memory-split">
+              <h3>Ricordi che vale la pena conservare</h3>
+              <h4>Il viaggio in Grecia</h4>
+              <div class="memory-text">
+                <p>Il nostro viaggio in Grecia è stato il più lungo che abbiamo mai fatto insieme, ed è uno dei ricordi più belli che custodisco nel cuore.</p>
+                <p>Ero talmente felice di vivere quell'avventura con te che avrei voluto non finisse mai. Ogni giorno era un nuovo ricordo da aggiungere alla nostra storia, e ogni istante aveva qualcosa di speciale semplicemente perché lo stavo condividendo con te.</p>
+                <p>Tutte quelle pita che abbiamo mangiato per risparmiare, le giornate trascorse al mare, le lunghe salite sotto il sole e il caldo che sembrava non dare tregua... Oggi, ripensandoci, sono proprio quei piccoli momenti a farmi sorridere di più. Sono stati loro a rendere quel viaggio autentico, unico e indimenticabile.</p>
+                <p>Sono ricordi che non voglio mai dimenticare, perché raccontano una parte della nostra storia. E spero con tutto il cuore che quel viaggio sia stato solo uno dei tanti che ci aspettano ancora, mano nella mano.</p>
+              </div>
+              <div class="photo-carousel-wrap">
+                <div class="photo-carousel">
+                  <img src="assets/photos/Grecia/Preview.jpeg" alt="Grecia">
+                  <img src="assets/photos/Grecia/1.jpeg" alt="Grecia 1">
+                  <img src="assets/photos/Grecia/2.png" alt="Grecia 2">
+                  <img src="assets/photos/Grecia/3.jpeg" alt="Grecia 3">
+                  <img src="assets/photos/Grecia/4.png" alt="Grecia 4">
+                  <img src="assets/photos/Grecia/5.jpeg" alt="Grecia 5">
+                  <img src="assets/photos/Grecia/6.jpeg" alt="Grecia 6">
+                </div>
+              </div>
             </div>
-            <div class="memory">
-              <h4>Un momento difficile, superato insieme</h4>
-              <p>Replace this with a hard time you got through together — whatever mattered most.</p>
-              <span class="edit-note">edit: find "Un momento difficile" in the code</span>
+            <div class="memory memory-split">
+              <h4>Il viaggio a Berlino</h4>
+              <div class="memory-text">
+                <p>Il viaggio a Berlino è stato fatto di vento, freddo e passi infiniti, ma proprio per questo è stato uno dei viaggi più romantici che abbiamo vissuto.</p>
+                <p>Ricordo le lunghe camminate tra le strade della città, il freddo che ci accompagnava ovunque e quel vento che sembrava volerci mettere alla prova. Eppure, ogni volta che le tue mani diventavano fredde, c'ero io a stringerle tra le mie per scaldarle.</p>
+                <p>Erano gesti semplici, quasi invisibili agli occhi degli altri, ma per me significavano tutto. Perché prendermi cura di te, anche in un momento così piccolo, mi faceva sentire nel posto giusto.</p>
+                <p>Ripensandoci, non ricordo il freddo né la stanchezza. Ricordo solo il calore delle nostre mani intrecciate, i sorrisi che ci siamo scambiati e la felicità di poter condividere ogni passo con te.</p>
+                <p>Perché ovunque andremo, il viaggio più bello sarà sempre quello in cui potrò tenerti la mano e ricordarti, anche nei giorni più freddi, quanto ti amo.</p>
+              </div>
+              <div class="photo-carousel-wrap">
+                <div class="photo-carousel">
+                  <img src="assets/photos/Berlino/Preview.jpeg" alt="Berlino">
+                  <img src="assets/photos/Berlino/1.jpeg" alt="Berlino 1">
+                  <img src="assets/photos/Berlino/2.jpeg" alt="Berlino 2">
+                </div>
+              </div>
+            </div>
+            <div class="memory memory-split">
+              <h4>Il viaggio Bruxelles</h4>
+              <div class="memory-text">
+                <p>Il viaggio a Bruxelles, secondo me, è stato il viaggio più romantico che abbiamo mai fatto.</p>
+                <p>Non solo per la città, le sue strade e la sua atmosfera, ma soprattutto per quel momento che porterò sempre nel cuore: il nostro primo incontro con la neve insieme.</p>
+                <p>Ricordo quei fiocchi che cadevano piano, il freddo intorno a noi e quella sensazione di meraviglia nel vivere qualcosa di così semplice ma allo stesso tempo così speciale.</p>
+                <p>E poi è arrivato quel momento inaspettato: un bacio sotto la neve. Un gesto semplice, ma che in quell'istante è sembrato perfetto. Come se tutto intorno a noi si fosse fermato per lasciare spazio solo a noi due.</p>
+                <p>È uno di quei ricordi che non hanno bisogno di grandi parole per essere spiegati, perché ogni volta che ci penso riesco ancora a sentire quella stessa emozione.</p>
+                <p>Bruxelles rimarrà sempre speciale, non per la neve o per il luogo, ma perché è lì che abbiamo creato uno dei nostri momenti più belli.</p>
+              </div>
+              <div class="photo-carousel-wrap">
+                <div class="photo-carousel">
+                  <img src="assets/photos/Bruxelles/Preview.jpeg" alt="Bruxelles">
+                  <img src="assets/photos/Bruxelles/1.jpeg" alt="Bruxelles 1">
+                  <img src="assets/photos/Bruxelles/2.jpeg" alt="Bruxelles 2">
+                </div>
+              </div>
+            </div>
+            <div class="memory memory-teaser">
+              <div class="memory-teaser-title">
+                <h4>Secondo Anniversario</h4>
+                <div class="memory-teaser-cta" aria-hidden="true">
+                  <span class="memory-teaser-cta-text">click me</span>
+                  <svg class="memory-teaser-cta-arrow" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M55 12 C 40 10, 15 20, 12 45" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M4 36 L12 45 L21 38" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+              <img class="memory-teaser-photo" src="assets/photos/SecondoAnniversario/Preview.jpg" alt="Secondo Anniversario" tabindex="0" role="button" aria-label="Apri il ricordo: Secondo Anniversario">
+              <template>
+                <div class="text-lightbox-split">
+                  <video controls playsinline autoplay class="text-lightbox-video">
+                    <source src="assets/photos/SecondoAnniversario/twoyear.mp4" type="video/mp4">
+                  </video>
+                  <div class="text-lightbox-text">
+                    <p>Il nostro secondo anniversario è un momento che guardo con il cuore pieno di gratitudine.
+                        Prima di tutto, sono davvero grato per essere arrivati fin qui, per tutto il percorso che abbiamo fatto insieme e per tutte le emozioni che abbiamo vissuto in questi anni.
+                        Ripenso a tutti i momenti condivisi, ai sorrisi, alle risate, ai viaggi, alle piccole abitudini che sono diventate speciali e a tutti quei ricordi che abbiamo costruito giorno dopo giorno.
+                        In questi due anni ho avuto la fortuna di conoscerti sempre di più, di vedere quanto sei speciale e di capire quanto sia bello avere accanto una persona con cui poter condividere ogni parte della vita, dai momenti più semplici a quelli più importanti.
+                        Questo anniversario non rappresenta solo il tempo passato insieme, ma tutto quello che abbiamo creato: una storia fatta di amore, complicità e tanti piccoli momenti che porterò sempre nel cuore.
+                        Sono felice di essere qui con te oggi e ancora più felice di pensare a tutti i ricordi che dobbiamo ancora creare insieme. Grazie per essere la mia persona, il mio sorriso e il mio posto speciale.</p>
+                  </div>
+                </div>
+              </template>
             </div>
           </div>
         </div>
@@ -827,21 +897,29 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
       <div class="tl-item">
         <div class="tl-year">III anno</div>
         <div class="tl-card">
-          <h3>Right now</h3>
-          <div class="tl-memories">
-            <div class="memory">
-              <h4>Dove siamo ora</h4>
-              <p>Replace this with where you are today — what you're building or grateful for this year.</p>
-              <span class="edit-note">edit: find "Dove siamo ora" in the code</span>
-            </div>
-            <div class="memory">
-              <h4>Cosa sogniamo</h4>
-              <p>Replace this with what you're dreaming about together next.</p>
-              <span class="edit-note">edit: find "Cosa sogniamo" in the code</span>
+          <div class="tl-memories carousel">
+            <div class="memory memory-split">
+              <h3>È stata dura, ma ne è valsa la pena</h3>
+              <h4>Il nostro primo viaggio in Italia, a Senigallia</h4>
+              <div class="memory-text">
+                <p>È stato un altro piccolo capitolo speciale della nostra storia.</p>
+                <p>Ricordo quelle ore e ore di treno che, normalmente, sarebbero potute sembrare lunghe e stancanti, ma che con te sono passate velocemente. Perché quando sono al tuo fianco anche il viaggio più semplice diventa un momento da vivere e custodire.</p>
+                <p>A Senigallia abbiamo scoperto nuovi posti, assaggiato cibi buonissimi nei ristoranti, passeggiato insieme e vissuto quei piccoli momenti che rendono un viaggio davvero nostro.</p>
+                <p>E come dimenticare il tragitto in bici verso la spiaggia? Quel senso di libertà, il vento sul viso e la felicità di fare qualcosa di così semplice insieme a te.</p>
+                <p>Forse non è stato il viaggio più lontano che abbiamo fatto, ma è stato speciale perché era il nostro primo viaggio in Italia, il nostro modo di creare nuovi ricordi in un luogo diverso, ma sempre con la stessa cosa che conta davvero: noi due insieme.</p>
+                <p>Perché alla fine, qualsiasi destinazione diventa più bella quando la persona accanto a te è quella giusta.</p>
+              </div>
+              <div class="photo-carousel-wrap">
+                <div class="photo-carousel">
+                  <img src="assets/photos/Senigallia/Preview.jpeg" alt="Senigallia">
+                  <img src="assets/photos/Senigallia/1.jpeg" alt="Senigallia 1">
+                  <img src="assets/photos/Senigallia/2.jpeg" alt="Senigallia 2">
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
     </div>
   </section>
 
@@ -962,7 +1040,95 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
   }
 
   document.querySelectorAll('.tl-memories.carousel').forEach(c => initCarousel(c, '.memory', 'Vai al ricordo'));
-  document.querySelectorAll('.photo-carousel').forEach(c => initCarousel(c, 'img', 'Vai alla foto'));
+
+  // Photo carousels are nested inside the memory carousel on the same axis, which native
+  // overflow scrolling can't isolate reliably (mobile Safari hijacks the gesture to the
+  // outer scroller). Drive them from touch coordinates instead and preventDefault once a
+  // horizontal drag is detected, so the gesture never reaches the outer carousel at all.
+  function initPhotoCarousel(track){
+    const slides = Array.from(track.children);
+    if (slides.length < 2) return;
+    const wrap = track.parentElement;
+
+    const dots = document.createElement('div');
+    dots.className = 'carousel-dots';
+    slides.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.setAttribute('aria-label', `Vai alla foto ${i + 1}`);
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => goTo(i));
+      dots.appendChild(dot);
+    });
+    const dotButtons = Array.from(dots.children);
+    wrap.appendChild(dots);
+
+    let index = 0;
+    let startX = 0, startY = 0, deltaX = 0, dragAxis = null, dragged = false;
+
+    function setTransform(px, animate){
+      track.style.transition = animate ? 'transform 0.3s ease' : 'none';
+      track.style.transform = `translateX(${px}px)`;
+    }
+
+    function goTo(i, animate = true){
+      index = Math.max(0, Math.min(slides.length - 1, i));
+      setTransform(-index * track.clientWidth, animate);
+      dotButtons.forEach(d => d.classList.remove('active'));
+      dotButtons[index].classList.add('active');
+    }
+
+    track.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) return;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      deltaX = 0;
+      dragAxis = null;
+      dragged = false;
+      setTransform(-index * track.clientWidth, false);
+    }, { passive: true });
+
+    track.addEventListener('touchmove', (e) => {
+      if (!e.touches.length) return;
+      const dx = e.touches[0].clientX - startX;
+      const dy = e.touches[0].clientY - startY;
+      if (dragAxis === null){
+        if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+        dragAxis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      }
+      if (dragAxis === 'x'){
+        e.preventDefault();
+        dragged = true;
+        deltaX = dx;
+        setTransform(-index * track.clientWidth + dx, false);
+      }
+    }, { passive: false });
+
+    function endDrag(){
+      if (dragAxis === 'x'){
+        const threshold = track.clientWidth * 0.18;
+        if (deltaX < -threshold && index < slides.length - 1) goTo(index + 1);
+        else if (deltaX > threshold && index > 0) goTo(index - 1);
+        else goTo(index);
+      }
+      dragAxis = null;
+      deltaX = 0;
+    }
+    track.addEventListener('touchend', endDrag, { passive: true });
+    track.addEventListener('touchcancel', endDrag, { passive: true });
+
+    // swallow the tap-to-open-lightbox click that follows a real drag
+    track.addEventListener('click', (e) => {
+      if (dragged){
+        e.stopPropagation();
+        e.preventDefault();
+        dragged = false;
+      }
+    }, true);
+
+    window.addEventListener('resize', () => goTo(index, false));
+  }
+
+  document.querySelectorAll('.photo-carousel').forEach(initPhotoCarousel);
 
   // Lightbox for memory photos
   const lightbox = document.getElementById('lightbox');
