@@ -757,6 +757,42 @@
     background:var(--gold);
   }
   .yr-dot:last-child{ background:var(--leather); }
+
+  /* ---------- MUSIC TOGGLE ---------- */
+  .music-toggle{
+    position:fixed;
+    bottom:1.6rem;
+    right:1.6rem;
+    z-index:90;
+    width:52px; height:52px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:rgba(246,241,234,0.88);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    color:var(--leather);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 10px 24px -12px rgba(46,38,32,0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .music-toggle:hover{
+    transform:translateY(-2px);
+    box-shadow:0 16px 30px -14px rgba(46,38,32,0.4);
+  }
+  .music-toggle:active{
+    transform:scale(0.94);
+  }
+  .music-toggle svg{ width:22px; height:22px; }
+  .music-toggle .music-icon-off{ display:none; }
+  .music-toggle.muted .music-icon-on{ display:none; }
+  .music-toggle.muted .music-icon-off{ display:block; }
+  @media (max-width:700px){
+    .music-toggle{ width:44px; height:44px; bottom:1.1rem; right:1.1rem; }
+    .music-toggle svg{ width:19px; height:19px; }
+  }
 </style>
 </head>
 <body>
@@ -1202,6 +1238,21 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
     </div>
   </section>
 
+  <!-- ============ BACKGROUND MUSIC ============ -->
+  <audio id="introAudio" src="assets/audio/intro.m4a" preload="auto"></audio>
+  <audio id="bgMusic" src="assets/audio/bruno-mars-mix.mp3" loop preload="auto"></audio>
+  <button class="music-toggle" id="musicToggle" aria-pressed="true" aria-label="Metti in pausa la musica">
+    <svg class="music-icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+    </svg>
+    <svg class="music-icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+      <line x1="23" y1="9" x2="17" y2="15"/>
+      <line x1="17" y1="9" x2="23" y2="15"/>
+    </svg>
+  </button>
+
   <!-- ============ LIGHTBOX ============ -->
   <div class="lightbox" id="lightbox">
     <button class="lightbox-close" id="lightboxClose">close ✕</button>
@@ -1509,12 +1560,14 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
     textLightbox.classList.add('open');
     const video = textLightboxContent.querySelector('video');
     if (video) video.play().catch(() => {});
+    pauseMusicForVideo();
   }
   function closeTextLightbox(){
     textLightbox.classList.remove('open');
     const video = textLightboxContent.querySelector('video');
     if (video) video.pause();
     textLightboxContent.innerHTML = '';
+    resumeMusicAfterVideo();
   }
 
   document.querySelectorAll('.memory-teaser-photo').forEach(photo => {
@@ -1544,6 +1597,58 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
       if (e.key === 'ArrowRight') navigateLightbox(1);
     }
   });
+
+  // Background music: an intro plays first, then hands off to the looping mix.
+  // Browsers block audio autoplay until the user interacts with the page, so we try
+  // immediately and, if blocked, start on the very first tap/click/key.
+  const introAudio = document.getElementById('introAudio');
+  const bgMusic = document.getElementById('bgMusic');
+  const musicToggle = document.getElementById('musicToggle');
+  let activeAudio = introAudio;
+  let musicPausedForVideo = false;
+
+  function setMusicState(playing){
+    musicToggle.classList.toggle('muted', !playing);
+    musicToggle.setAttribute('aria-pressed', String(playing));
+    musicToggle.setAttribute('aria-label', playing ? 'Metti in pausa la musica' : 'Riproduci la musica');
+  }
+
+  function tryPlayMusic(){
+    activeAudio.play().then(() => setMusicState(true)).catch(() => setMusicState(false));
+  }
+  tryPlayMusic();
+
+  introAudio.addEventListener('ended', () => {
+    activeAudio = bgMusic;
+    tryPlayMusic();
+  });
+
+  function startMusicOnFirstInteraction(e){
+    if (musicToggle.contains(e.target)) return;
+    if (!activeAudio.paused) return;
+    tryPlayMusic();
+  }
+  ['click', 'pointerdown', 'pointerup', 'touchstart', 'touchend', 'keydown'].forEach(evt => {
+    document.addEventListener(evt, startMusicOnFirstInteraction, { once: true, passive: true });
+  });
+
+  musicToggle.addEventListener('click', () => {
+    if (activeAudio.paused) tryPlayMusic();
+    else {
+      activeAudio.pause();
+      setMusicState(false);
+    }
+  });
+
+  // Avoid overlapping the memory videos' own audio with the background track.
+  function pauseMusicForVideo(){
+    musicPausedForVideo = !activeAudio.paused;
+    activeAudio.pause();
+  }
+  function resumeMusicAfterVideo(){
+    if (musicPausedForVideo) tryPlayMusic();
+    musicPausedForVideo = false;
+  }
 </script>
 
 </body>
