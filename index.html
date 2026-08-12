@@ -340,11 +340,18 @@
     border-top:none;
   }
 
+  .carousel-nav{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:0.9rem;
+    margin-top:1.2rem;
+  }
   .carousel-dots{
     display:flex;
     justify-content:center;
     gap:0.5rem;
-    margin-top:1.2rem;
+    margin-top:0;
   }
   .carousel-dots button{
     width:7px; height:7px;
@@ -358,6 +365,34 @@
   .carousel-dots button.active{
     background:var(--leather);
     transform:scale(1.25);
+  }
+
+  .carousel-arrow{
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:30px; height:30px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition: color 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
+  }
+  .carousel-arrow svg{
+    width:15px; height:15px;
+  }
+  .carousel-arrow:hover:not(:disabled){
+    color:var(--leather);
+    border-color:var(--leather);
+  }
+  .carousel-arrow:active:not(:disabled){
+    transform:scale(0.9);
+  }
+  .carousel-arrow:disabled{
+    opacity:0.28;
+    cursor:default;
   }
 
   .photo-carousel-wrap{
@@ -433,6 +468,44 @@
   .lightbox-close:hover{
     color:#F6F1EA;
     border-color:rgba(246,241,234,0.7);
+  }
+
+  .lightbox-arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:46px; height:46px;
+    border-radius:50%;
+    border:1px solid rgba(246,241,234,0.35);
+    background:rgba(46,38,32,0.35);
+    color:rgba(246,241,234,0.85);
+    cursor:pointer;
+    transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease, transform 0.15s ease;
+  }
+  .lightbox-arrow svg{
+    width:22px; height:22px;
+  }
+  .lightbox-arrow-prev{ left:1.6vw; }
+  .lightbox-arrow-next{ right:1.6vw; }
+  .lightbox-arrow:hover:not(:disabled){
+    color:#F6F1EA;
+    border-color:rgba(246,241,234,0.7);
+  }
+  .lightbox-arrow:active:not(:disabled){
+    transform:translateY(-50%) scale(0.92);
+  }
+  .lightbox-arrow:disabled,
+  .lightbox-arrow.hidden{
+    display:none;
+  }
+  @media (max-width:700px){
+    .lightbox-arrow{ width:38px; height:38px; }
+    .lightbox-arrow svg{ width:18px; height:18px; }
+    .lightbox-arrow-prev{ left:2vw; }
+    .lightbox-arrow-next{ right:2vw; }
   }
 
   /* ---------- TEXT LIGHTBOX ---------- */
@@ -1132,7 +1205,9 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
   <!-- ============ LIGHTBOX ============ -->
   <div class="lightbox" id="lightbox">
     <button class="lightbox-close" id="lightboxClose">close ✕</button>
+    <button class="lightbox-arrow lightbox-arrow-prev" id="lightboxPrev" aria-label="Foto precedente"><svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <img id="lightboxImg" src="" alt="">
+    <button class="lightbox-arrow lightbox-arrow-next" id="lightboxNext" aria-label="Foto successiva"><svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
 
   <!-- ============ TEXT LIGHTBOX ============ -->
@@ -1187,10 +1262,27 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
   }, { threshold: 0.25 });
   items.forEach(i => io.observe(i));
 
-  // Swipeable carousel with dot indicators (used for both memory blocks and photo galleries)
+  const arrowIcon = (dir) => dir === 'prev'
+    ? '<svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  // Swipeable carousel with dot indicators and click arrows (used for both memory blocks and photo galleries)
   function initCarousel(carousel, slideSelector, dotLabel){
     const slides = Array.from(carousel.querySelectorAll(slideSelector));
     if (slides.length < 2) return;
+
+    const nav = document.createElement('div');
+    nav.className = 'carousel-nav';
+
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'carousel-arrow carousel-arrow-prev';
+    prevBtn.setAttribute('aria-label', 'Ricordo precedente');
+    prevBtn.innerHTML = arrowIcon('prev');
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'carousel-arrow carousel-arrow-next';
+    nextBtn.setAttribute('aria-label', 'Ricordo successivo');
+    nextBtn.innerHTML = arrowIcon('next');
 
     const dots = document.createElement('div');
     dots.className = 'carousel-dots';
@@ -1198,24 +1290,39 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
       const dot = document.createElement('button');
       dot.setAttribute('aria-label', `${dotLabel} ${i + 1}`);
       if (i === 0) dot.classList.add('active');
-      dot.addEventListener('click', () => {
-        slides[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-      });
+      dot.addEventListener('click', () => goToSlide(i));
       dots.appendChild(dot);
     });
-    carousel.insertAdjacentElement('afterend', dots);
-
     const dotButtons = Array.from(dots.children);
+
+    nav.appendChild(prevBtn);
+    nav.appendChild(dots);
+    nav.appendChild(nextBtn);
+    carousel.insertAdjacentElement('afterend', nav);
+
+    let current = 0;
+
+    function goToSlide(i){
+      slides[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+    }
+
+    prevBtn.addEventListener('click', () => goToSlide(Math.max(0, current - 1)));
+    nextBtn.addEventListener('click', () => goToSlide(Math.min(slides.length - 1, current + 1)));
+
     const slideIO = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const idx = slides.indexOf(entry.target);
+          current = slides.indexOf(entry.target);
           dotButtons.forEach(d => d.classList.remove('active'));
-          dotButtons[idx].classList.add('active');
+          dotButtons[current].classList.add('active');
+          prevBtn.disabled = current === 0;
+          nextBtn.disabled = current === slides.length - 1;
         }
       });
     }, { root: carousel, threshold: 0.6 });
     slides.forEach(s => slideIO.observe(s));
+
+    prevBtn.disabled = true;
   }
 
   document.querySelectorAll('.tl-memories.carousel').forEach(c => initCarousel(c, '.memory', 'Vai al ricordo'));
@@ -1229,6 +1336,19 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
     if (slides.length < 2) return;
     const wrap = track.parentElement;
 
+    const nav = document.createElement('div');
+    nav.className = 'carousel-nav';
+
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'carousel-arrow carousel-arrow-prev';
+    prevBtn.setAttribute('aria-label', 'Foto precedente');
+    prevBtn.innerHTML = arrowIcon('prev');
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'carousel-arrow carousel-arrow-next';
+    nextBtn.setAttribute('aria-label', 'Foto successiva');
+    nextBtn.innerHTML = arrowIcon('next');
+
     const dots = document.createElement('div');
     dots.className = 'carousel-dots';
     slides.forEach((_, i) => {
@@ -1239,7 +1359,11 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
       dots.appendChild(dot);
     });
     const dotButtons = Array.from(dots.children);
-    wrap.appendChild(dots);
+
+    nav.appendChild(prevBtn);
+    nav.appendChild(dots);
+    nav.appendChild(nextBtn);
+    wrap.appendChild(nav);
 
     let index = 0;
     let startX = 0, startY = 0, deltaX = 0, dragAxis = null, dragged = false;
@@ -1254,7 +1378,13 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
       setTransform(-index * track.clientWidth, animate);
       dotButtons.forEach(d => d.classList.remove('active'));
       dotButtons[index].classList.add('active');
+      prevBtn.disabled = index === 0;
+      nextBtn.disabled = index === slides.length - 1;
     }
+
+    prevBtn.addEventListener('click', () => goTo(index - 1));
+    nextBtn.addEventListener('click', () => goTo(index + 1));
+    prevBtn.disabled = true;
 
     track.addEventListener('touchstart', (e) => {
       if (e.touches.length !== 1) return;
@@ -1313,18 +1443,55 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImg');
   const lightboxClose = document.getElementById('lightboxClose');
+  const lightboxPrev = document.getElementById('lightboxPrev');
+  const lightboxNext = document.getElementById('lightboxNext');
+
+  let lightboxGroup = [];
+  let lightboxIndex = 0;
+
+  // Photos that belong together (a photo-carousel, or the favorites gallery) can be
+  // browsed with the lightbox arrows instead of closing and reopening for each one.
+  function getLightboxGroup(img){
+    const carousel = img.closest('.photo-carousel');
+    if (carousel) return Array.from(carousel.children).filter(el => el.tagName === 'IMG');
+    if (img.closest('.photo-card')) return Array.from(document.querySelectorAll('.gallery .photo-card img'));
+    return [img];
+  }
+
+  function showLightboxImage(){
+    const img = lightboxGroup[lightboxIndex];
+    lightboxImg.src = img.src;
+    lightboxImg.alt = img.alt;
+    const hasGroup = lightboxGroup.length > 1;
+    lightboxPrev.classList.toggle('hidden', !hasGroup);
+    lightboxNext.classList.toggle('hidden', !hasGroup);
+    lightboxPrev.disabled = !hasGroup || lightboxIndex === 0;
+    lightboxNext.disabled = !hasGroup || lightboxIndex === lightboxGroup.length - 1;
+  }
+
+  function navigateLightbox(delta){
+    const next = lightboxIndex + delta;
+    if (next < 0 || next >= lightboxGroup.length) return;
+    lightboxIndex = next;
+    showLightboxImage();
+  }
 
   document.querySelectorAll('.memory:not(.memory-teaser) img, .photo-card img').forEach(img => {
     img.addEventListener('click', () => {
-      lightboxImg.src = img.src;
-      lightboxImg.alt = img.alt;
+      lightboxGroup = getLightboxGroup(img);
+      lightboxIndex = lightboxGroup.indexOf(img);
+      showLightboxImage();
       lightbox.classList.add('open');
     });
   });
 
+  lightboxPrev.addEventListener('click', (e) => { e.stopPropagation(); navigateLightbox(-1); });
+  lightboxNext.addEventListener('click', (e) => { e.stopPropagation(); navigateLightbox(1); });
+
   function closeLightbox(){
     lightbox.classList.remove('open');
     lightboxImg.src = '';
+    lightboxGroup = [];
   }
   lightboxClose.addEventListener('click', closeLightbox);
   lightbox.addEventListener('click', (e) => {
@@ -1371,6 +1538,10 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
     if (e.key === 'Escape'){
       closeLightbox();
       closeTextLightbox();
+    }
+    if (lightbox.classList.contains('open')){
+      if (e.key === 'ArrowLeft') navigateLightbox(-1);
+      if (e.key === 'ArrowRight') navigateLightbox(1);
     }
   });
 </script>
