@@ -15,6 +15,11 @@
     --gold:#C9A667;
     --ink-soft: rgba(46,38,32,0.62);
     --line: rgba(46,38,32,0.12);
+    --rose:#B3555F;
+    --rose-light:#E7B9BE;
+    --rose-deep:#7C2E38;
+    --sage:#8FA07C;
+    --sage-deep:#5F7350;
   }
 
   *{ box-sizing:border-box; margin:0; padding:0; }
@@ -793,6 +798,146 @@
     .music-toggle{ width:44px; height:44px; bottom:1.1rem; right:1.1rem; }
     .music-toggle svg{ width:19px; height:19px; }
   }
+
+  /* ---------- END-OF-PAGE POPUP ---------- */
+  .end-popup-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(46,38,32,0.55);
+    backdrop-filter:blur(3px);
+    -webkit-backdrop-filter:blur(3px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:4vh 4vw;
+    z-index:200;
+  }
+  .end-popup-overlay.open{ display:flex; }
+  .end-popup-card{
+    background:var(--paper);
+    border-radius:20px;
+    padding:2.6rem 2.4rem;
+    max-width:340px;
+    width:100%;
+    text-align:center;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.5);
+    transform:scale(0.92) translateY(8px);
+    opacity:0;
+    animation: popIn 0.4s cubic-bezier(.2,.8,.3,1.15) forwards;
+  }
+  @keyframes popIn{
+    to{ transform:scale(1) translateY(0); opacity:1; }
+  }
+  .end-popup-text{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:1.5rem;
+  }
+  .end-popup-actions{
+    display:flex;
+    gap:1rem;
+    justify-content:center;
+    margin-top:1.8rem;
+  }
+  .end-popup-btn{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:0.7rem 1.7rem;
+    border-radius:999px;
+    cursor:pointer;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--ink);
+    transition: transform 0.15s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .end-popup-btn-yes{
+    background:var(--leather);
+    border-color:var(--leather);
+    color:#fff;
+  }
+  .end-popup-btn-yes:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 20px -10px rgba(166,103,60,0.6);
+  }
+  .end-popup-btn-no:hover{
+    border-color:var(--ink-soft);
+  }
+  .end-popup-btn:active{ transform:scale(0.94); }
+
+  /* ---------- BOUQUET CELEBRATION ---------- */
+  .bouquet-overlay{
+    position:fixed;
+    inset:0;
+    background: radial-gradient(circle at 50% 38%, #FFFCF8 0%, var(--paper) 55%, #E9DCC9 100%);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:210;
+    overflow:hidden;
+  }
+  .bouquet-overlay.open{ display:flex; }
+  .bouquet-close{ position:absolute; top:1.6rem; right:1.8rem; z-index:2; }
+
+  .petal-field{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+  }
+  .petal{
+    position:absolute;
+    width:12px;
+    height:16px;
+    background:linear-gradient(160deg, var(--rose-light), var(--rose) 60%, var(--rose-deep));
+    border-radius:0% 100% 0% 100%;
+  }
+
+  .bouquet-scene{
+    position:relative;
+    z-index:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    padding:2rem;
+    transform:scale(0.85);
+    opacity:0;
+    animation: bouquetIn 0.9s cubic-bezier(.2,.8,.3,1.1) 0.15s forwards;
+  }
+  @keyframes bouquetIn{
+    to{ transform:scale(1); opacity:1; }
+  }
+  .bouquet-svg{
+    width:min(66vw, 300px);
+    height:auto;
+    filter: drop-shadow(0 20px 30px rgba(46,38,32,0.22));
+  }
+  .bouquet-greeting{
+    margin-top:1.8rem;
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:clamp(1.6rem, 4.6vw, 2.7rem);
+    color:var(--ink);
+    opacity:0;
+    animation: greetIn 0.8s ease 0.9s forwards;
+  }
+  .bouquet-sub{
+    margin-top:0.6rem;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--leather);
+    opacity:0;
+    animation: greetIn 0.8s ease 1.15s forwards;
+  }
+  @keyframes greetIn{
+    from{ opacity:0; transform:translateY(14px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
 </style>
 </head>
 <body>
@@ -1267,6 +1412,91 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
     <div class="text-lightbox-content" id="textLightboxContent"></div>
   </div>
 
+  <!-- ============ END-OF-PAGE POPUP ============ -->
+  <div class="end-popup-overlay" id="endPopup">
+    <div class="end-popup-card">
+      <p class="end-popup-text">Hai visto tutto?</p>
+      <div class="end-popup-actions">
+        <button class="end-popup-btn end-popup-btn-yes" id="endPopupYes">Sì</button>
+        <button class="end-popup-btn end-popup-btn-no" id="endPopupNo">No</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ BOUQUET CELEBRATION ============ -->
+  <div class="bouquet-overlay" id="bouquetOverlay">
+    <button class="lightbox-close bouquet-close" id="bouquetClose">close ✕</button>
+    <div class="petal-field" id="petalField"></div>
+    <div class="bouquet-scene">
+      <svg class="bouquet-svg" viewBox="0 0 320 380" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="roseGlow" cx="35%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#E7B9BE" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#B3555F" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="roseStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#B3555F"/>
+            <stop offset="100%" stop-color="#7C2E38"/>
+          </linearGradient>
+          <linearGradient id="roseStrokeBlush" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#E7B9BE"/>
+            <stop offset="100%" stop-color="#B3555F"/>
+          </linearGradient>
+          <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#8FA07C"/>
+            <stop offset="100%" stop-color="#5F7350"/>
+          </linearGradient>
+          <linearGradient id="ribbonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#C9A667"/>
+            <stop offset="100%" stop-color="#A6673C"/>
+          </linearGradient>
+          <g id="roseBloom">
+            <circle r="26" fill="url(#roseGlow)" opacity="0.6"/>
+            <path d="M0,-24 C16,-24 23,-11 17,1 C11,12 -6,14 -13,3 C-18,-5 -11,-16 1,-13 C7,-11 7,-3 0,-2" fill="none" stroke="url(#roseStroke)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M-20,6 C-26,10 -30,3 -26,-4" fill="none" stroke="url(#roseStroke)" stroke-width="3" stroke-linecap="round"/>
+            <path d="M20,4 C27,7 30,0 25,-6" fill="none" stroke="url(#roseStroke)" stroke-width="3" stroke-linecap="round"/>
+          </g>
+          <g id="roseBloomBlush">
+            <circle r="24" fill="url(#roseGlow)" opacity="0.6"/>
+            <path d="M0,-22 C15,-22 21,-10 15,1 C10,11 -6,13 -12,3 C-16,-4 -10,-14 1,-12 C6,-10 6,-3 0,-2" fill="none" stroke="url(#roseStrokeBlush)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M-18,5 C-24,9 -27,3 -24,-3" fill="none" stroke="url(#roseStrokeBlush)" stroke-width="2.6" stroke-linecap="round"/>
+            <path d="M18,4 C25,6 27,0 23,-5" fill="none" stroke="url(#roseStrokeBlush)" stroke-width="2.6" stroke-linecap="round"/>
+          </g>
+        </defs>
+
+        <!-- stems -->
+        <path d="M160,340 Q165,240 160,150" fill="none" stroke="url(#leafGrad)" stroke-width="5" stroke-linecap="round"/>
+        <path d="M160,340 Q120,270 100,190" fill="none" stroke="url(#leafGrad)" stroke-width="5" stroke-linecap="round"/>
+        <path d="M160,340 Q200,270 220,190" fill="none" stroke="url(#leafGrad)" stroke-width="5" stroke-linecap="round"/>
+        <path d="M160,340 Q95,300 70,230" fill="none" stroke="url(#leafGrad)" stroke-width="4.5" stroke-linecap="round"/>
+        <path d="M160,340 Q225,300 250,230" fill="none" stroke="url(#leafGrad)" stroke-width="4.5" stroke-linecap="round"/>
+
+        <!-- leaves -->
+        <path d="M128,255 Q142,242 158,250 Q144,260 128,255 Z" fill="url(#leafGrad)"/>
+        <path d="M196,262 Q182,248 166,257 Q181,266 196,262 Z" fill="url(#leafGrad)"/>
+        <path d="M108,215 Q122,206 134,214 Q121,222 108,215 Z" fill="url(#leafGrad)"/>
+
+        <!-- ribbon bow -->
+        <g transform="translate(160,338)">
+          <path d="M-4,4 L-16,54 L-4,46 Z" fill="url(#ribbonGrad)"/>
+          <path d="M4,4 L16,54 L4,46 Z" fill="url(#ribbonGrad)"/>
+          <path d="M0,0 C-22,-14 -34,4 -14,10 C-26,16 -30,32 -6,26 C-3,22 0,16 0,10 Z" fill="url(#ribbonGrad)"/>
+          <path d="M0,0 C22,-14 34,4 14,10 C26,16 30,32 6,26 C3,22 0,16 0,10 Z" fill="url(#ribbonGrad)"/>
+          <circle r="6" fill="#C9A667"/>
+        </g>
+
+        <!-- roses -->
+        <use href="#roseBloomBlush" transform="translate(70,230) scale(0.85) rotate(-10)"/>
+        <use href="#roseBloomBlush" transform="translate(250,230) scale(0.85) rotate(10)"/>
+        <use href="#roseBloom" transform="translate(100,190) scale(1) rotate(-6)"/>
+        <use href="#roseBloom" transform="translate(220,190) scale(1) rotate(6)"/>
+        <use href="#roseBloom" transform="translate(160,148) scale(1.2)"/>
+      </svg>
+      <p class="bouquet-greeting">Happy 3rd Anniversary</p>
+      <p class="bouquet-sub">Ti amo, BB</p>
+    </div>
+  </div>
+
 <script>
 
   // Random photo on each hero card spin
@@ -1649,6 +1879,83 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
     if (musicPausedForVideo) tryPlayMusic();
     musicPausedForVideo = false;
   }
+
+  // "Hai visto tutto?" popup once the reader reaches the bottom of the page
+  const endPopup = document.getElementById('endPopup');
+  const endPopupYes = document.getElementById('endPopupYes');
+  const endPopupNo = document.getElementById('endPopupNo');
+  let endPopupShown = false;
+
+  function checkScrollEnd(){
+    if (endPopupShown) return;
+    const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 40;
+    if (nearBottom){
+      endPopupShown = true;
+      endPopup.classList.add('open');
+      window.removeEventListener('scroll', checkScrollEnd);
+    }
+  }
+  window.addEventListener('scroll', checkScrollEnd, { passive: true });
+  checkScrollEnd();
+
+  function closeEndPopup(){
+    endPopup.classList.remove('open');
+  }
+  endPopupNo.addEventListener('click', closeEndPopup);
+  endPopup.addEventListener('click', (e) => {
+    if (e.target === endPopup) closeEndPopup();
+  });
+
+  // Bouquet celebration: a hand-drawn rose bouquet with scattered static petals
+  const bouquetOverlay = document.getElementById('bouquetOverlay');
+  const bouquetClose = document.getElementById('bouquetClose');
+  const petalField = document.getElementById('petalField');
+  let petalsSpawned = false;
+
+  function spawnPetals(){
+    if (petalsSpawned) return;
+    petalsSpawned = true;
+    const count = 16;
+    for (let i = 0; i < count; i++){
+      const petal = document.createElement('div');
+      petal.className = 'petal';
+      const left = Math.random() * 100;
+      const top = Math.random() * 100;
+      const rotation = Math.random() * 360;
+      const size = 9 + Math.random() * 8;
+      const opacity = 0.55 + Math.random() * 0.35;
+      const hue = Math.random() > 0.5 ? 'var(--rose-light)' : 'var(--rose)';
+      petal.style.left = left + '%';
+      petal.style.top = top + '%';
+      petal.style.width = size + 'px';
+      petal.style.height = (size * 1.3) + 'px';
+      petal.style.opacity = opacity;
+      petal.style.transform = `rotate(${rotation}deg)`;
+      petal.style.background = `linear-gradient(160deg, ${hue}, var(--rose) 60%, var(--rose-deep))`;
+      petalField.appendChild(petal);
+    }
+  }
+
+  function openBouquet(){
+    closeEndPopup();
+    bouquetOverlay.classList.add('open');
+    spawnPetals();
+  }
+  function closeBouquet(){
+    bouquetOverlay.classList.remove('open');
+  }
+  endPopupYes.addEventListener('click', openBouquet);
+  bouquetClose.addEventListener('click', closeBouquet);
+  bouquetOverlay.addEventListener('click', (e) => {
+    if (e.target === bouquetOverlay) closeBouquet();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape'){
+      closeEndPopup();
+      closeBouquet();
+    }
+  });
 </script>
 
 </body>
