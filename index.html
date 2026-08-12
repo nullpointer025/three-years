@@ -594,17 +594,17 @@
   }
 
   .gallery{
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:1.4rem;
+    column-count:3;
+    column-gap:1.4rem;
     perspective:1200px;
   }
   @media (max-width:700px){
-    .gallery{ grid-template-columns:repeat(2,1fr); }
+    .gallery{ column-count:2; column-gap:1rem; }
   }
 
   .photo-card{
-    aspect-ratio:4/5;
+    break-inside:avoid;
+    margin-bottom:1.4rem;
     border-radius:14px;
     background:
       linear-gradient(160deg, rgba(143,175,201,0.35), rgba(201,166,103,0.25));
@@ -614,9 +614,20 @@
     justify-content:center;
     flex-direction:column;
     gap:0.5rem;
+    overflow:hidden;
     transform-style:preserve-3d;
     transition: transform 0.4s ease, box-shadow 0.4s ease;
     cursor:default;
+  }
+  @media (max-width:700px){
+    .photo-card{ margin-bottom:1rem; }
+  }
+  .photo-card:has(img[src]:not([src=""])){
+    aspect-ratio:auto;
+    cursor:zoom-in;
+  }
+  .photo-card:not(:has(img[src]:not([src=""]))){
+    aspect-ratio:4/5;
   }
   .photo-card:hover{
     transform:rotateY(8deg) rotateX(-4deg) translateY(-6px);
@@ -637,9 +648,7 @@
 
   /* actual photo, hidden unless src is set */
   .photo-card img{
-    width:100%; height:100%;
-    object-fit:cover;
-    border-radius:13px;
+    width:100%;
     display:none;
   }
   .photo-card img[src]:not([src=""]){
@@ -1088,12 +1097,25 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
     </div>
     <div class="gallery">
       <!-- to add a photo: drop the file in assets/photos/ and set this img's src, e.g. src="assets/photos/photo-1.jpg" -->
-      <div class="photo-card"><img src="" alt=""><div class="ph-mark">✦</div><span class="lbl">Photo 1</span></div>
-      <div class="photo-card"><img src="" alt=""><div class="ph-mark">✦</div><span class="lbl">Photo 2</span></div>
-      <div class="photo-card"><img src="" alt=""><div class="ph-mark">✦</div><span class="lbl">Photo 3</span></div>
-      <div class="photo-card"><img src="" alt=""><div class="ph-mark">✦</div><span class="lbl">Photo 4</span></div>
-      <div class="photo-card"><img src="" alt=""><div class="ph-mark">✦</div><span class="lbl">Photo 5</span></div>
-      <div class="photo-card"><img src="" alt=""><div class="ph-mark">✦</div><span class="lbl">Photo 6</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/1a.jpg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 1</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/2a.jpeg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 2</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/6c.png" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 3</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/3a.jpeg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 4</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/9a.jpeg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 5</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/4a.jpeg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 6</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/7a.jpeg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 7</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/8a.jpeg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 8</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/2b.jpeg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 9</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/5a.jpeg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 10</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/10a.jpeg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 11</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/6a.jpeg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 12</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/9b.jpeg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 13</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/3b.jpeg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 14</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/8b.jpeg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 15</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/6d.jpeg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 16</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/7b.jpeg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 17</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/10b.jpg" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 18</span></div>
+      <div class="photo-card"><img src="assets/photos/Favs/6b.png" alt="Un nostro momento preferito"><div class="ph-mark">✦</div><span class="lbl">Photo 19</span></div>
     </div>
   </section>
 
@@ -1292,7 +1314,7 @@ A noi, ai tre anni che ci hanno portato fin qui, e a tutti quelli che ci aspetta
   const lightboxImg = document.getElementById('lightboxImg');
   const lightboxClose = document.getElementById('lightboxClose');
 
-  document.querySelectorAll('.memory:not(.memory-teaser) img').forEach(img => {
+  document.querySelectorAll('.memory:not(.memory-teaser) img, .photo-card img').forEach(img => {
     img.addEventListener('click', () => {
       lightboxImg.src = img.src;
       lightboxImg.alt = img.alt;
